@@ -18,7 +18,7 @@ export default function Checkout() {
     <div className="max-w-6xl mx-auto p-6 font-sans">
 
       <div className="text-sm text-gray-500 mb-8">
-        <Link href="/cart" className='hover:underline'>Cart</Link> /{' '}
+        <Link href="/Cart" className='hover:underline'>Cart</Link> /{' '}
         <Link href="/shipping" className='hover:underline'>Shipping</Link> /{' '}
         <span className="text-black font-semibold underline">Payment</span>
       </div>
