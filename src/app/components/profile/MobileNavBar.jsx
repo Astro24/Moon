@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 export default function MobileNavBar() {
   const pathname = usePathname();
@@ -21,6 +21,7 @@ export default function MobileNavBar() {
         {links.map(({ href, label }, i) => {
           const active = pathname === href;
           return (
+            // Enter animation
             <motion.li
               key={href}
               initial={{ opacity: 0, y: -30 }}
@@ -33,6 +34,7 @@ export default function MobileNavBar() {
               }}
               className="relative"
             >
+              {/* Active pill (button) */}
               {active && (
                 <motion.div
                   layoutId="active-pill-mobile"
@@ -44,6 +46,7 @@ export default function MobileNavBar() {
                   }}
                 />
               )}
+              {/* All links */}
               <Link
                 href={href}
                 className={`relative z-10 px-3 py-1.5 rounded-lg bg-transparent hover:bg-transparent ${

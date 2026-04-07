@@ -24,6 +24,7 @@ export default function NavBar() {
         {links.map(({ href, label }, i) => {
           const active = pathname === href;
           return (
+            // Enter animation
             <motion.li
               key={href}
               initial={{ opacity: 0, x: -30 }}
@@ -36,6 +37,7 @@ export default function NavBar() {
               }}
               className="relative z-1"
             >
+              {/* Active pill (button) */}
               {active && (
                 <motion.div
                   layoutId="active-pill"
@@ -53,7 +55,7 @@ export default function NavBar() {
                   }}
                 />
               )}
-
+              {/* Badge */}
               <AnimatePresence>
                 {active && (
                   <motion.span
@@ -72,7 +74,7 @@ export default function NavBar() {
                   />
                 )}
               </AnimatePresence>
-
+              {/* All Links */}
               <Link
                 href={href}
                 className={`relative z-10 flex items-center h-10 text-[14px] font-bold
