@@ -4,7 +4,7 @@ import { FaArrowRight } from "react-icons/fa6";
 export default function Footer() {
   return (
     <>
-      <footer className="footer sm:footer-horizontal bg-primary text-base-content p-8">
+      <footer className="footer sm:footer-horizontal bg-primary text-white text-base-content p-8">
         <aside>
           <img src="/logoLight.svg" alt="Moon Logo" />
           <p>Handcrafted in Vietnam since 1650 </p>
@@ -39,7 +39,7 @@ export default function Footer() {
           <a className="link link-hover">Mobile Apps</a>
         </nav>
       </footer>
-      <footer className="footer footer-center p-4 bg-primary text-base-content">
+      <footer className="footer footer-center p-4 bg-primary text-white text-base-content">
         <aside>
           <p>Copyright © 2023 | All right reserved | <a className="link link-hover">All Terms & Conditions</a> | <a className="link link-hover">Privacy Policy</a></p>
         </aside>
