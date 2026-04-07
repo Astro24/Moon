@@ -1,7 +1,9 @@
-export default function shippingAddressPage() {
+import ShippingAddressPage from "@/app/components/profile/pagesComponents/ShippingAddressPage";
+
+export default function shippingAddress() {
   return (
-    <main className="min-h-screen flex justify-center items-center w-full">
-      <h1>shippingAddressPage</h1>
+    <main className="min-h-screen">
+      <ShippingAddressPage />
     </main>
   );
 }

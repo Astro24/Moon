@@ -81,7 +81,7 @@ export default function NavBar() {
                   ${
                     active
                       ? "pl-14 pr-6 ml-5 mr-5 mt-2 mb-1 text-white"
-                      : "pl-19  text-black h-10 z-1"
+                      : "pl-19  text-black font-normal h-10 z-1"
                   }`}
               >
                 {label}
@@ -90,9 +90,9 @@ export default function NavBar() {
           );
         })}
       </ul>
-
+      {/* Logout button */}
       <div className="w-60 p-4 mt-auto">
-        <Link href="/">
+        <Link href="/Login">
           <button className="w-full h-12.5 bg-[#3A3845] text-white text-[14px] font-bold rounded-lg">
             Logout
           </button>

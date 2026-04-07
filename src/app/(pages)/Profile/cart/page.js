@@ -1,7 +1,9 @@
-export default function CartPage() {
+import CartPage from "@/app/components/profile/pagesComponents/CartPage"
+
+export default function Cart() {
   return (
-    <main className="min-h-screen flex justify-center items-center w-full">
-      <h1>Cart</h1>
+    <main className="min-h-screen">
+      <CartPage />
     </main>
   );
 }
