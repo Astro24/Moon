@@ -1,5 +1,24 @@
+"use client";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 export default function Login() {
+  const router = useRouter();
+
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    const form = e.target;
+
+    // هذا يخلي required يشتغل
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    // إ
+    router.push("/Homepage");
+  }
+
   return (
     <div className="flex flex-col md:flex-row h-screen w-full">
       <div className="w-full md:w-1/2 h-1/3 md:h-full bg-[#3F3F4F] flex items-center justify-center">
@@ -8,8 +27,12 @@ export default function Login() {
           className="w-full max-w-[400px] object-contain"
         />
       </div>
+
       <div className="w-full md:w-1/2 flex items-center justify-center mt-5 bg-white">
-        <div className="w-[90%] md:w-[380px] flex flex-col gap-4">
+        <form
+          onSubmit={handleSubmit}
+          className="w-[90%] md:w-[380px] flex flex-col gap-4"
+        >
           <h1 className="text-black text-6xl md:text-4xl font-bold">
             Welcome Back!
           </h1>
@@ -19,17 +42,19 @@ export default function Login() {
           <div className="flex flex-col gap-1">
             <label className="text-black text-2xl">Email</label>
             <input
-              type="text"
+              type="email"
               className="border border-gray-300 rounded-md p-2 w-full"
               placeholder="Email"
+              required
             />
           </div>
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1" >
             <label className="text-black text-sm">Password</label>
             <input
               type="password"
               className="border border-gray-300 rounded-md p-2 w-full"
               placeholder="Password"
+              required
             />
             <Link href="/ForgotPass" className="text-blue-500 text-sm text-right">
               Forgot Password?
@@ -39,7 +64,9 @@ export default function Login() {
             <input type="checkbox" className="w-4 h-4" />
             <span className="text-sm">Remember me</span>
           </div>
-          <button className="bg-black text-white py-2 rounded-md w-full">
+          <button
+            type="submit"
+            className="bg-[#3F3F4F] text-white py-2 rounded-md w-full">
             Login
           </button>
           <button className="border py-2 rounded-md w-full flex items-center justify-center gap-2">
@@ -53,7 +80,8 @@ export default function Login() {
             </Link>
           </p>
 
-        </div>
+
+        </form>
       </div>
     </div>
   );
