@@ -1,74 +1,101 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function NavBar() {
   const pathname = usePathname();
 
-  function isActive(herf) {
-    return pathname === herf
-      ? "pr-6 pl-14 pt-4 bg-[#3A3845] text-white mr-5 h-[50px] text-bold text-[14px] rounded-lg ml-7 m-3 "
-      : "border-b-1 h-[50px] border-[#E0E0E0] rounded-none pl-19 pt-3";
-  }
-
-  function badgeMenu(herf) {
-    return pathname === herf
-      ? "absolute top-3 left-0 h-[50px] bg-[#3A3845] w-[5px] rounded-r-sm"
-      : "";
-  }
+  const links = [
+    { href: "/Profile", label: "Profile" },
+    { href: "/Profile/order-history", label: "Order History" },
+    { href: "/Profile/favorites", label: "Favorites" },
+    { href: "/Profile/cart", label: "Cart" },
+    { href: "/Profile/shipping-address", label: "Shipping Address" },
+    { href: "/Profile/settings", label: "Settings" },
+  ];
 
   return (
-    <nav className="min-h-screen hidden lg:block pl-0 ">
+    <nav
+      className="hidden lg:flex lg:flex-col sticky top-20 self-start"
+      style={{ height: "calc(100vh - 80px)" }}
+    >
       <ul className="menu bg-background w-60 pl-0 pr-0">
-        <li>
-          <Link href={"/Profile"} className={isActive("/Profile")}>
-            <span className={badgeMenu("/Profile")}></span>
-            Profile
-          </Link>
-        </li>
-        <li>
-          <Link
-            href={"/Profile/order-history"}
-            className={isActive("/Profile/order-history")}
-          >
-            <span className={badgeMenu("/Profile/order-history")}></span>
-            Order History
-          </Link>
-        </li>
-        <li>
-          <Link
-            href={"/Profile/favorites"}
-            className={isActive("/Profile/favorites")}
-          >
-            <span className={badgeMenu("/Profile/favorites")}></span>
-            Favorites
-          </Link>
-        </li>
-        <li>
-          <Link href={"/Profile/cart"} className={isActive("/Profile/cart")}>
-            <span className={badgeMenu("/Profile/cart")}></span>
-            Cart
-          </Link>
-        </li>
-        <li>
-          <Link
-            href={"/Profile/shipping-address"}
-            className={isActive("/Profile/shipping-address")}
-          >
-            <span className={badgeMenu("/Profile/shipping-address")}></span>
-            Shipping Address
-          </Link>
-        </li>
-        <li>
-          <Link
-            href={"/Profile/settings"}
-            className={isActive("/Profile/settings")}
-          >
-            <span className={badgeMenu("/Profile/settings")}></span>
-            Settings
-          </Link>
-        </li>
+        {links.map(({ href, label }, i) => {
+          const active = pathname === href;
+          return (
+            <motion.li
+              key={href}
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{
+                delay: i * 0.07,
+                type: "spring",
+                stiffness: 300,
+                damping: 15,
+              }}
+              className="relative z-1"
+            >
+              {active && (
+                <motion.div
+                  layoutId="active-pill"
+                  className="absolute bg-[#3A3845] rounded-lg"
+                  style={{
+                    top: "8px",
+                    bottom: "4px",
+                    left: "30px",
+                    right: "20px",
+                  }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 350,
+                    damping: 28,
+                  }}
+                />
+              )}
+
+              <AnimatePresence>
+                {active && (
+                  <motion.span
+                    key={href + "-badge"}
+                    className="absolute bg-[#3A3845] w-1.25 rounded-r-sm z-20"
+                    style={{
+                      top: "11px",
+                      height: "40px",
+                      left: "-19px",
+                      right: "2px",
+                    }}
+                    initial={{ scaleY: 0, opacity: 0 }}
+                    animate={{ scaleY: 1, opacity: 1 }}
+                    exit={{ scaleY: 0, opacity: 0 }}
+                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                  />
+                )}
+              </AnimatePresence>
+
+              <Link
+                href={href}
+                className={`relative z-10 flex items-center h-12.5 text-[14px] font-bold
+                  ${
+                    active
+                      ? "pl-14 pr-6 ml-5 mr-5 mt-2 mb-1 text-white"
+                      : "pl-19 border-b border-[#E0E0E0] text-black h-10 z-1"
+                  }`}
+              >
+                {label}
+              </Link>
+            </motion.li>
+          );
+        })}
       </ul>
+
+      <div className="w-60 p-4 mt-auto">
+        <Link href="/">
+          <button className="w-full h-12.5 bg-[#3A3845] text-white text-[14px] font-bold rounded-lg">
+            Logout
+          </button>
+        </Link>
+      </div>
     </nav>
   );
 }
