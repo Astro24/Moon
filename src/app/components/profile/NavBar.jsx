@@ -17,7 +17,7 @@ export default function NavBar() {
 
   return (
     <nav
-      className="hidden lg:flex lg:flex-col sticky top-20 self-start"
+      className="hidden lg:flex lg:flex-col sticky top-20 self-start shadow-md"
       style={{ height: "calc(100vh - 80px)" }}
     >
       <ul className="menu bg-background w-60 pl-0 pr-0">
@@ -43,7 +43,7 @@ export default function NavBar() {
                   style={{
                     top: "8px",
                     bottom: "4px",
-                    left: "30px",
+                    left: "40px",
                     right: "20px",
                   }}
                   transition={{
@@ -60,8 +60,8 @@ export default function NavBar() {
                     key={href + "-badge"}
                     className="absolute bg-[#3A3845] w-1.25 rounded-r-sm z-20"
                     style={{
-                      top: "11px",
-                      height: "40px",
+                      top: "10px",
+                      height: "35px",
                       left: "-19px",
                       right: "2px",
                     }}
@@ -75,11 +75,11 @@ export default function NavBar() {
 
               <Link
                 href={href}
-                className={`relative z-10 flex items-center h-12.5 text-[14px] font-bold
+                className={`relative z-10 flex items-center h-10 text-[14px] font-bold
                   ${
                     active
                       ? "pl-14 pr-6 ml-5 mr-5 mt-2 mb-1 text-white"
-                      : "pl-19 border-b border-[#E0E0E0] text-black h-10 z-1"
+                      : "pl-19  text-black h-10 z-1"
                   }`}
               >
                 {label}
