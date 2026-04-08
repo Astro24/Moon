@@ -1,16 +1,16 @@
 'use client';
 
-import React, { Suspense } from 'react'; 
+import React, { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { RxFilter } from "react-icons/rx";
 
-const ShopContent = () => {
+
+function ShopContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const currentPage = Number(searchParams.get('page')) || 1;
-
   const handlePageChange = (pageNumber) => {
     router.replace(`/shop?page=${pageNumber}`, { scroll: false });
   };
@@ -30,9 +30,11 @@ const ShopContent = () => {
   const categories = ["Dinnerware", "Ceramic", "Furniture", "Decor Art", "Gifts sets"];
   const prices = ["$0 - $10", "$10 - $50", "$50 - $100", "$100 - $200", "> $200"];
   const colors = ["#ffffff", "#d9bba9", "#c6d8d3", "#a34a4a", "#8e8e9e"];
+  const tags = ["Dinnerware", "Ceramic", "Furniture", "Decor Art", "Gifts sets"];
 
   return (
     <div className="max-w-[1400px] mx-auto py-8 pl-4 md:pl-10 pr-6 font-sans">
+
       {/* Navigation */}
       <nav className="flex items-center gap-2 text-[13px] mb-6 text-gray-400">
         <span className="cursor-pointer hover:text-black" onClick={() => router.push('/')}>Home</span>
@@ -73,6 +75,7 @@ const ShopContent = () => {
       </div>
 
       <div className="flex flex-col md:flex-row gap-[40px] items-start">
+
         {/* Sidebar */}
         <aside className="w-[200px] flex-shrink-0 hidden md:block">
           <hr className="border-black mb-7" />
@@ -106,11 +109,29 @@ const ShopContent = () => {
               ))}
             </div>
           </div>
+
+
+          <hr className="border-black mb-6" />
+          <div className="mb-6">
+            <h3 className="text-[12px] font-bold uppercase tracking-[0.1em] mb-3">Tags</h3>
+            <div className="space-y-4">
+              {tags.map(tag => (
+                <label key={tag} className="flex items-center gap-2 text-[12px] text-gray-600 cursor-pointer">
+                  <div className="flex-shrink-0 flex items-center justify-center">
+                    <input type="checkbox" className="w-4 h-4 accent-black" />
+
+                  </div>
+                  <span className="text-[#2A254B]">{tag}</span>
+                </label>
+              ))}
+            </div>
+          </div>
         </aside>
 
         <div className="flex-1 flex flex-col">
           <div className="w-full">
-            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-x-[30px] gap-y-[60px]">
+
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-x-[15px] gap-y-[60px]">
               {products.map((product, index) => (
                 <div key={index} className="flex flex-col bg-white w-full max-w-[260px] mx-auto h-full">
                   <Link href={`/product/${index}`}>
@@ -147,19 +168,23 @@ const ShopContent = () => {
             >
               ‹
             </button>
+
             {[1, 2, 3, 4].map((num) => (
               <button
                 key={num}
                 onClick={() => handlePageChange(num)}
-                className={`w-8 h-8 flex items-center justify-center text-[13px]
-                  ${num === currentPage
+                className={`w-9 h-9 flex items-center justify-center text-[13px] transition-all
+        ${num === currentPage
                     ? 'bg-[#3a3a4a] text-white'
-                    : 'border border-transparent hover:border-black'
-                  }`}
+                    : 'text-black hover:text-gray-500'
+                  } 
+        ${num === 2 ? 'border border-black' : 'border border-transparent'} 
+      `}
               >
                 {num}
               </button>
             ))}
+
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               className="p-2 hover:opacity-70"
@@ -171,15 +196,12 @@ const ShopContent = () => {
       </div>
     </div>
   );
-};
+}
 
-
-const Shop = () => {
+export default function Shop() {
   return (
-    <Suspense fallback={<div className="text-center py-20">Loading Shop...</div>}>
+    <Suspense fallback={<div className="text-center py-20">Loading...</div>}>
       <ShopContent />
     </Suspense>
   );
-};
-
-export default Shop;
+}
