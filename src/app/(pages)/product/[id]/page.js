@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import {FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn,FaStar, FaPlus, FaMinus, FaRegHeart} from 'react-icons/fa';
-import styles from '@/app/style/Product.module.css';
+import styles from '@/app/styles/Product.module.css';
 
 export default function CombinedProductPage() {
   const params = useParams();
