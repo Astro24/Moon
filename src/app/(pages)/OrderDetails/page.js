@@ -1,3 +1,6 @@
+'use client';
+
+import { useEffect, useState } from 'react'; 
 import Link from "next/link";
 import Image from "next/image";
 import { TbFileInvoice } from "react-icons/tb";
@@ -6,11 +9,26 @@ import { FaTruck } from "react-icons/fa";
 import { TbTruckDelivery } from "react-icons/tb";
 
 export default function OrderDetails() {
+  
+  const [order, setOrder] = useState(null);
+
+
+  useEffect(() => {
+    const savedOrder = localStorage.getItem('recentOrder');
+    if (savedOrder) {
+      setOrder(JSON.parse(savedOrder));
+    }
+  }, []);
+
   const items = [
     { name: "MARIN DINNER PLATE", color: "Space Blue", cat: "Dinner Set", price: 79.0, qty: 1, img: "/orderDetails/Rectangle 1.svg" },
     { name: "PORCELAIN DINNER PLATE", color: "Space Pink", cat: "Tableware", price: 53.0, qty: 1, img: "/orderDetails/Rectangle 1-2.svg" },
     { name: "ROUNDED DUAL HANDLE VASE", color: "Breeze", cat: "Home Decor", price: 42.0, qty: 1, img: "/orderDetails/Rectangle 1-1.svg" },
   ];
+
+  if (!order) {
+    return <div className="p-10 text-center">Loading your order details...</div>;
+  }
 
   return (
     <div className="max-w-6xl mx-auto p-4 sm:p-6 font-sans">
@@ -36,6 +54,8 @@ export default function OrderDetails() {
           </div>
         </div>
 
+        <p className="mb-4 text-lg">Thank you for your order, <strong>{order.firstName}</strong>!</p>
+
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 text-sm">
           <p className="text-gray-400">
             Order date: <span className="font-bold text-black">Feb 16, 2026</span>
@@ -47,49 +67,12 @@ export default function OrderDetails() {
         </div>
         <hr className="my-4 h-[1.5px] bg-gray-300 border-0" />
 
-        <div className="w-full py-6 sm:py-8 overflow-x-auto pb-4">
-          <ul className="steps steps-horizontal w-full min-w-max">
-            <li className="step step-success" data-content="">
-              <div className="flex flex-col items-center pt-2">
-                <span className="font-bold text-success text-xs sm:text-sm whitespace-nowrap">Order Confirmed</span>
-                <span className="text-slate-500 text-xs mt-1">Wed, 11th Jan</span>
-              </div>
-            </li>
-            <li className="step" data-content="">
-              <div className="flex flex-col items-center pt-2">
-                <span className="font-semibold text-slate-400 text-xs sm:text-sm whitespace-nowrap">Shipped</span>
-                <span className="text-slate-500 text-xs mt-1">Wed, 11th Jan</span>
-              </div>
-            </li>
-            <li className="step" data-content="">
-              <div className="flex flex-col items-center pt-2">
-                <span className="font-semibold text-slate-400 text-xs sm:text-sm whitespace-nowrap">Out For Delivery</span>
-                <span className="text-slate-500 text-xs mt-1">Wed, 11th Jan</span>
-              </div>
-            </li>
-            <li className="step" data-content="">
-              <div className="flex flex-col items-center pt-2">
-                <span className="font-semibold text-slate-400 text-xs sm:text-sm whitespace-nowrap">Delivered</span>
-                <span className="text-slate-500 text-xs mt-1 text-center">Expected by Mon 16th</span>
-              </div>
-            </li>
-          </ul>
-        </div>
-
         <div className="space-y-6 mb-8 sm:mb-12">
           {items.map((item, idx) => (
             <div key={idx} className="flex flex-row items-center justify-between pb-6 border-b border-gray-100 last:border-0 gap-4">
               <div className="flex gap-4 sm:gap-6 items-center flex-1">
                 <div className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 bg-gray-100 rounded-xl overflow-hidden flex items-center justify-center">
-                  <div className="text-gray-300 text-xs w-full h-full">
-                    <Image
-                      src={item.img}
-                      alt={item.name}
-                      width={100}
-                      height={100}
-                      className="object-cover w-full h-full"
-                    />
-                  </div>
+                  <Image src={item.img} alt={item.name} width={100} height={100} className="object-cover w-full h-full" />
                 </div>
                 <div className="flex-1">
                   <h3 className="font-bold text-xs sm:text-sm tracking-wide line-clamp-2">{item.name}</h3>
@@ -109,24 +92,23 @@ export default function OrderDetails() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 text-sm mt-6 mb-6">
           <div className="space-y-2">
             <h3 className="font-bold mb-3">Payment</h3>
-            <p className="text-gray-500 flex items-center gap-2">
-              Visa **56
+            <p className="text-gray-500 flex items-center gap-2 capitalize">
+              {order.paymentMethod === 'card' ? `Credit Card ****${order.cardNumber?.slice(-4)}` : 'STC Bank'}
               <img
                 src="https://sa.visamiddleeast.com/content/dam/VCOM/global/about-visa/images/visa-brandmark-blue-1960x622.png"
-                width={40}
-                height={15}
-                alt="Visa"
-                className="object-contain"
+                width={40} height={15} alt="Visa" className="object-contain"
               />
             </p>
+            <p className="text-xs text-gray-400">{order.email}</p>
           </div>
           <div>
-            <h3 className="font-bold mb-3">Delivery</h3>
+            <h3 className="font-bold mb-3">Delivery Address</h3>
             <p className="text-gray-500 leading-relaxed">
-              Address<br />
-              847 Jewess Bridge Apt.<br />
-              174 London, UK<br />
-              474-769-3919
+              {order.firstName} {order.lastName}<br />
+              {order.address}<br />
+              {order.city}, {order.state} {order.ZIPcode}<br />
+              {order.country}<br />
+              {order.phone}
             </p>
           </div>
         </div>
@@ -134,43 +116,24 @@ export default function OrderDetails() {
         <hr className="my-4 h-[1.5px] bg-gray-300 border-0" />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-4 mt-6">
-          <div className="space-y-3 order-2 md:order-1">
-            <h4 className="font-bold mb-2">Need Help?</h4>
-            <p className="text-gray-500 cursor-pointer hover:text-black transition-colors flex items-center gap-2">
-              ⓘ Order Issues ↗
-            </p>
-            <p className="text-gray-500 cursor-pointer hover:text-black transition-colors flex items-center gap-2">
-              <TbTruckDelivery className="text-lg" /> Delivery Info ↗
-            </p>
-            <a href="" className="text-gray-500 cursor-pointer hover:text-black transition-colors flex items-center gap-2">
-              ↩ Returns ↗
-            </a>
-          </div>
-          
-          <div className="space-y-3 text-sm sm:text-base order-1 md:order-2">
-            <h4 className="font-bold mb-3">Order Summary</h4>
-            <div className="flex justify-between">
-              <span className="text-gray-500">Subtotal</span> 
-              <span className="font-medium">$5554.00</span>
+            <div className="space-y-3 order-2 md:order-1">
+                <h4 className="font-bold mb-2">Need Help?</h4>
+                <p className="text-gray-500 cursor-pointer hover:text-black transition-colors flex items-center gap-2">ⓘ Order Issues ↗</p>
+                <p className="text-gray-500 cursor-pointer hover:text-black transition-colors flex items-center gap-2"><TbTruckDelivery className="text-lg" /> Delivery Info ↗</p>
+                <a href="" className="text-gray-500 cursor-pointer hover:text-black transition-colors flex items-center gap-2">↩ Returns ↗</a>
             </div>
-            <div className="flex justify-between">
-              <span className="text-gray-500">Discount</span> 
-              <span className="text-gray-400">(20%) -$1109.40</span>
+            
+            <div className="space-y-3 text-sm sm:text-base order-1 md:order-2">
+                <h4 className="font-bold mb-3">Order Summary</h4>
+                <div className="flex justify-between">
+                    <span className="text-gray-500">Subtotal</span> 
+                    <span className="font-medium">$475.00</span>
+                </div>
+                <div className="flex justify-between font-extrabold text-lg">
+                    <span>Total</span> 
+                    <span>$490.00</span> 
+                </div>
             </div>
-            <div className="flex justify-between">
-              <span className="text-gray-500">Delivery</span> 
-              <span className="font-medium">$0.00</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-500">Tax</span> 
-              <span className="text-gray-400">+$221.88</span>
-            </div>
-            <hr className="my-3 border-gray-200" />
-            <div className="flex justify-between font-extrabold text-lg">
-              <span>Total</span> 
-              <span>$4666.48</span> {/* Recalculated total for UI realism */}
-            </div>
-          </div>
         </div>
       </div>
     </div>

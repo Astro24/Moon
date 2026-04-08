@@ -11,8 +11,14 @@ export default function Checkout() {
   const handlePlaceOrder = (e) => {
     e.preventDefault();
 
-    router.push('/order-confirmation');
+    const formData = new FormData(e.currentTarget);
+    const orderData = Object.fromEntries(formData.entries());
+
+    localStorage.setItem('recentOrder', JSON.stringify(orderData));
+
+    router.push('/OrderDetails');
   };
+
 
   return (
     <div className="max-w-6xl mx-auto p-6 font-sans">
@@ -23,7 +29,6 @@ export default function Checkout() {
         <span className="text-black font-semibold underline">Payment</span>
       </div>
 
-      {/* Changed the main wrapper to a form to handle validation globally */}
       <form onSubmit={handlePlaceOrder} className="grid grid-cols-1 lg:grid-cols-12 gap-16">
 
         <div className="lg:col-span-7">
@@ -31,19 +36,19 @@ export default function Checkout() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block mb-1">First Name *</label>
-              <input type="text" placeholder="Samatha" className="input border-2 border-black w-full bg-white rounded-none focus:outline-none" required />
+              <input name="firstName" type="text" placeholder="Samatha" className="input border-2 border-black w-full bg-white rounded-none focus:outline-none" required />
             </div>
             <div>
               <label className="block mb-1">Last Name *</label>
-              <input type="text" placeholder="Clarken" className="input border-2 border-black w-full bg-white rounded-none focus:outline-none" required />
+              <input name="lastName" type="text" placeholder="Clarken" className="input border-2 border-black w-full bg-white rounded-none focus:outline-none" required />
             </div>
             <div className="col-span-2">
               <label className="block mb-1">Company</label>
-              <input type="text" placeholder="Moon" className="input border-2 border-black w-full bg-white rounded-none focus:outline-none" />
+              <input name="company" type="text" placeholder="Moon" className="input border-2 border-black w-full bg-white rounded-none focus:outline-none" />
             </div>
             <div className="col-span-2">
               <label className="block mb-1">Country / Region *</label>
-              <select className="select border-2 border-black w-full bg-white rounded-none focus:outline-none" required>
+              <select name="country" className="select border-2 border-black w-full bg-white rounded-none focus:outline-none" required>
                 <option value="">Select a country</option>
                 <option value="US">United States</option>
                 <option value="SA">Saudi Arabia</option>
@@ -51,15 +56,15 @@ export default function Checkout() {
             </div>
             <div className="col-span-2">
               <label className="block mb-1">Street address *</label>
-              <input type="text" placeholder="Address" className="input border-2 border-black w-full bg-white rounded-none focus:outline-none" required />
+              <input name="address" type="text" placeholder="Address" className="input border-2 border-black w-full bg-white rounded-none focus:outline-none" required />
             </div>
             <div className="col-span-1">
               <label className="block mb-1">Town / City *</label>
-              <input type="text" placeholder="City" className="input border-2 border-black w-full bg-white rounded-none focus:outline-none" required />
+              <input name="city" type="text" placeholder="City" className="input border-2 border-black w-full bg-white rounded-none focus:outline-none" required />
             </div>
             <div className="col-span-1">
               <label className="block mb-1">State *</label>
-              <select className="select border-2 border-black w-full bg-white rounded-none focus:outline-none" required>
+              <select name='state' className="select border-2 border-black w-full bg-white rounded-none focus:outline-none" required>
                 <option value="">Select a state</option>
                 <option value="NY">New York (NY)</option>
                 <option value="CA">California (CA)</option>
@@ -67,19 +72,19 @@ export default function Checkout() {
             </div>
             <div className="col-span-1">
               <label className="block mb-1">ZIP Code</label>
-              <input type="text" placeholder="Zip code" className="input border-2 border-black w-full bg-white rounded-none focus:outline-none" required />
+              <input name='ZIPcode' type="text" placeholder="Zip code" className="input border-2 border-black w-full bg-white rounded-none focus:outline-none" />
             </div>
             <div className="col-span-1">
               <label className="block mb-1">Phone *</label>
-              <input type="tel" placeholder="(123) 456 - 7890" className="input border-2 border-black w-full bg-white rounded-none focus:outline-none" required />
+              <input name='phone' type="tel" placeholder="(123) 456 - 7890" className="input border-2 border-black w-full bg-white rounded-none focus:outline-none" required />
             </div>
             <div className="col-span-2">
               <label className="block mb-1">Email</label>
-              <input type="email" placeholder="example@youremail.com" className="input border-2 border-black w-full bg-white rounded-none focus:outline-none" required />
+              <input name='email' type="email" placeholder="example@youremail.com" className="input border-2 border-black w-full bg-white rounded-none focus:outline-none" required />
             </div>
             <div className="col-span-2">
               <label className="block mb-1">Order notes</label>
-              <textarea placeholder="Type your message here..." className="textarea border-2 border-black w-full bg-white rounded-none focus:outline-none h-32"></textarea>
+              <textarea name='note' placeholder="Type your message here..." className="textarea border-2 border-black w-full bg-white rounded-none focus:outline-none h-32"></textarea>
             </div>
           </div>
         </div>
@@ -151,6 +156,7 @@ export default function Checkout() {
                 {paymentMethod === 'card' && (
                   <div className="space-y-4">
                     <input
+                      name="cardNumber"
                       type="text"
                       placeholder="Card number"
                       required={paymentMethod === 'card'}
@@ -158,6 +164,7 @@ export default function Checkout() {
                     />
                     <input
                       type="text"
+                      name="cardName"
                       placeholder="Name on card"
                       required={paymentMethod === 'card'}
                       className="w-full bg-transparent border border-gray-500 p-3 text-sm focus:outline-none focus:border-white rounded"
@@ -188,7 +195,7 @@ export default function Checkout() {
                 <label className="flex items-center gap-3 cursor-pointer">
                   <input
                     type="radio"
-                    name="payment"
+                    name="paymentMethod"
                     value="stc"
                     checked={paymentMethod === 'stc'}
                     onChange={() => setPaymentMethod('stc')}
@@ -200,7 +207,8 @@ export default function Checkout() {
                 {paymentMethod === 'stc' && (
                   <div className="mt-4">
                     <input
-                      type="tel"
+                      name="stcPhoneNumber"
+                      type="tel"m
                       placeholder="Phone Number"
                       required={paymentMethod === 'stc'}
                       className="w-full bg-transparent border border-gray-500 p-3 text-sm focus:outline-none focus:border-white rounded"
