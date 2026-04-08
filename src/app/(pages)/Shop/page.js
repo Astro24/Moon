@@ -1,14 +1,44 @@
-export default function Shop() {
+'use client';
+
+import React, { Suspense } from 'react'; 
+import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import { RxFilter } from "react-icons/rx";
+
+const ShopContent = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const currentPage = Number(searchParams.get('page')) || 1;
+
+  const handlePageChange = (pageNumber) => {
+    router.replace(`/shop?page=${pageNumber}`, { scroll: false });
+  };
+
+  const products = [
+    { img: "Image (2).svg", title: "SMALL ECRU CERAMIC COMPOTE", price: "$49.00", desc: "Lorem ipsum dolor sit amet conse bolli tetur adipiscing elit." },
+    { img: "Image (3).svg", title: "PORCELAIN DINNER PLATE", price: "$49.00", desc: "Lorem ipsum dolor sit amet conse bolli tetur ." },
+    { img: "Image (4).svg", title: "WARRICK WHITE VASE 20", price: "$68.00", desc: "Lorem ipsum dolor sit amet conse bolli tetur adipiscing elit tortor eu." },
+    { img: "Image (5).svg", title: "MARIN WHITE DINNER PLATE", price: "$49.00", desc: "Lorem ipsum dolor sit amet conse." },
+    { img: "Image (6).svg", title: "TALL CREAM CERAMIC VASE", price: "$79.00", desc: "Lorem ipsum dolor sit amet conse bolli tetur adipiscing elit." },
+    { img: "Image (7).svg", title: "LUANA BOWL", price: "$49.00", desc: "Lorem ipsum dolor sit amet conse bolli tetur adipiscing elit tortor eu." },
+    { img: "Image (8).svg", title: "OPHELIA MATTE NATURAL VASE", price: "$149.00", desc: "Lorem ipsum dolor sit amet conse bolli tetur." },
+    { img: "Image (9).svg", title: "LUANA BOWL", price: "$49.00", desc: "Lorem ipsum dolor sit amet conse." },
+    { img: "Image (10).svg", title: "PORCELAIN DINNER PLATE", price: "$49.00", desc: "Lorem ipsum dolor sit amet conse bolli tetur adipiscing elit tortor eu." }
+  ];
+
+  const categories = ["Dinnerware", "Ceramic", "Furniture", "Decor Art", "Gifts sets"];
+  const prices = ["$0 - $10", "$10 - $50", "$50 - $100", "$100 - $200", "> $200"];
+  const colors = ["#ffffff", "#d9bba9", "#c6d8d3", "#a34a4a", "#8e8e9e"];
+
   return (
     <div className="max-w-[1400px] mx-auto py-8 pl-4 md:pl-10 pr-6 font-sans">
-
       {/* Navigation */}
       <nav className="flex items-center gap-2 text-[13px] mb-6 text-gray-400">
         <span className="cursor-pointer hover:text-black" onClick={() => router.push('/')}>Home</span>
         <span>/</span>
         <span className="text-black font-medium">Shop</span>
       </nav>
-      
 
       <div className="w-full mb-4 md:hidden flex flex-col gap-3">
         <div className="flex items-center justify-between">
@@ -141,4 +171,15 @@ export default function Shop() {
       </div>
     </div>
   );
-}
+};
+
+
+const Shop = () => {
+  return (
+    <Suspense fallback={<div className="text-center py-20">Loading Shop...</div>}>
+      <ShopContent />
+    </Suspense>
+  );
+};
+
+export default Shop;
