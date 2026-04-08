@@ -1,4 +1,4 @@
-export default function Home() {
+export default function BlogDetails() {
   return (
     <div className="bg-white text-[#1a1a1a] font-sans px-10 py-20 min-h-screen">
       <div className="max-w-[1200px] mx-auto flex flex-col lg:flex-row gap-20">
