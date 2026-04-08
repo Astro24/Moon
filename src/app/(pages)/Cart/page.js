@@ -209,7 +209,7 @@ export default function Cart() {
               <span>${subtotal.toFixed(2)}</span>
             </div>
 
-            <Link href="/checkout" className="block w-full">
+            <Link href="/Checkout" className="block w-full">
               <button
                 type="button"
                 className="w-full h-[44px] mt-4 border border-[#8f8c9e] text-[10px] font-bold hover:bg-white hover:text-[#363347] hover:border-white transition-colors duration-200"
