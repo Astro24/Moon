@@ -1,7 +1,9 @@
+import ProfilePage from "@/app/components/profile/pagesComponents/ProfilePage"
+
 export default function Profile() {
   return (
-    <div>
-
-    </div>
+    <main className="min-h-screen">
+      <ProfilePage />
+    </main>
   );
 }
