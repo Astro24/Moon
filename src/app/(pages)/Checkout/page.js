@@ -6,7 +6,43 @@ import { useRouter } from 'next/navigation';
 
 export default function Checkout() {
   const [paymentMethod, setPaymentMethod] = useState('card');
+  const [selectedCountry, setSelectedCountry] = useState('');
+  const [VisaOrMasterCard, setVisaOrMasterCard] = useState('');
   const router = useRouter();
+
+  const countryData = {
+    US: [
+      { code: 'NY', name: 'New York' },
+      { code: 'CA', name: 'California' },
+      { code: 'TX', name: 'Texas' },
+      { code: 'FL', name: 'Florida' },
+      { code: 'IL', name: 'Illinois' },
+      { code: 'PA', name: 'Pennsylvania' },
+      { code: 'OH', name: 'Ohio' },
+      { code: 'GA', name: 'Georgia' },
+      { code: 'NC', name: 'North Carolina' },
+      { code: 'MI', name: 'Michigan' },
+      { code: 'NJ', name: 'New Jersey' },
+      { code: 'VA', name: 'Virginia' },
+    ],
+    SA: [
+      { code: 'RIY', name: 'Riyadh Region' },
+      { code: 'MAKKAH', name: 'Makkah Region' },
+      { code: 'EASTERN', name: 'Eastern Province' },
+      { code: 'ASIR', name: 'Asir Region' },
+      { code: 'HAIL', name: 'Hail Region' },
+      { code: 'MADINAH', name: 'Madinah Region' },
+      { code: 'QASSIM', name: 'Al-Qassim Region' },
+      { code: 'TABUK', name: 'Tabuk Region' },
+      { code: 'NORTHERN', name: 'Northern Borders Region' },
+      { code: 'JIZAN', name: 'Jazan Region' },
+      { code: 'NAJRAN', name: 'Najran Region' },
+      { code: 'BAHAH', name: 'Al-Bahah Region' },
+      { code: 'JAWF', name: 'Al-Jawf Region' },
+    ],
+  }
+
+  const regions = countryData[selectedCountry] || [];
 
   const handlePlaceOrder = (e) => {
     e.preventDefault();
@@ -18,7 +54,16 @@ export default function Checkout() {
 
     router.push('/OrderDetails');
   };
-
+  const VorM = (e) => {
+    const value = e.target.value.replace(/\s+/g, '');
+    if (/^4/.test(value)) {
+      setVisaOrMasterCard('Visa')
+    } else if (/^(5[1-5]|2[2-7])/.test(value)) {
+      setVisaOrMasterCard('Mastercard')
+    } else {
+      setVisaOrMasterCard('');
+    }
+  }
 
   return (
     <div className="max-w-6xl mx-auto p-6 font-sans">
@@ -48,7 +93,13 @@ export default function Checkout() {
             </div>
             <div className="col-span-2">
               <label className="block mb-1">Country / Region *</label>
-              <select name="country" className="select border-2 border-black w-full bg-white rounded-none focus:outline-none" required>
+              <select
+                name="country"
+                className="select border-2 border-black w-full bg-white rounded-none focus:outline-none"
+                required
+                value={selectedCountry}
+                onChange={(e) => setSelectedCountry(e.target.value)}
+              >
                 <option value="">Select a country</option>
                 <option value="US">United States</option>
                 <option value="SA">Saudi Arabia</option>
@@ -63,11 +114,19 @@ export default function Checkout() {
               <input name="city" type="text" placeholder="City" className="input border-2 border-black w-full bg-white rounded-none focus:outline-none" required />
             </div>
             <div className="col-span-1">
-              <label className="block mb-1">State *</label>
-              <select name='state' className="select border-2 border-black w-full bg-white rounded-none focus:outline-none" required>
+              <label className="block mb-1">State / Region *</label>
+              <select
+                name='state'
+                className="select border-2 border-black w-full bg-white rounded-none focus:outline-none"
+                required
+                disabled={!selectedCountry}
+              >
                 <option value="">Select a state</option>
-                <option value="NY">New York (NY)</option>
-                <option value="CA">California (CA)</option>
+                {regions.map((region) => (
+                  <option key={region.code} value={region.code}>
+                    {region.name}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="col-span-1">
@@ -155,13 +214,23 @@ export default function Checkout() {
 
                 {paymentMethod === 'card' && (
                   <div className="space-y-4">
-                    <input
-                      name="cardNumber"
-                      type="text"
-                      placeholder="Card number"
-                      required={paymentMethod === 'card'}
-                      className="w-full bg-transparent border border-gray-500 p-3 text-sm focus:outline-none focus:border-white rounded"
-                    />
+                    <div className="relative">
+                      <input
+                        name="cardNumber"
+                        type="text"
+                        placeholder="Card number"
+                        required={paymentMethod === 'card'}
+                        onChange={VorM} // 2. Trigger the detection logic
+                        className="w-full bg-transparent border border-gray-500 p-3 text-sm focus:outline-none focus:border-white rounded"
+                      />
+
+                      {/* 3. This will now show up inside the input field on the right side */}
+                      {VisaOrMasterCard && (
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold uppercase text-white opacity-80 bg-black/20 px-1 rounded">
+                          {VisaOrMasterCard}
+                        </span>
+                      )}
+                    </div>
                     <input
                       type="text"
                       name="cardName"
@@ -208,7 +277,7 @@ export default function Checkout() {
                   <div className="mt-4">
                     <input
                       name="stcPhoneNumber"
-                      type="tel"m
+                      type="tel"
                       placeholder="Phone Number"
                       required={paymentMethod === 'stc'}
                       className="w-full bg-transparent border border-gray-500 p-3 text-sm focus:outline-none focus:border-white rounded"
