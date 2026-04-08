@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { CiTrash } from "react-icons/ci";
+import Link from "next/link"; 
 
 const initialCartItems = [
   {
@@ -208,12 +209,14 @@ export default function Cart() {
               <span>${subtotal.toFixed(2)}</span>
             </div>
 
-            <button
-              type="button"
-              className="w-full h-[44px] mt-4 border border-[#8f8c9e] text-[10px] font-bold hover:bg-white hover:text-[#363347] hover:border-white"
-            >
-              PROCEED TO CHECKOUT
-            </button>
+            <Link href="/checkout" className="block w-full">
+              <button
+                type="button"
+                className="w-full h-[44px] mt-4 border border-[#8f8c9e] text-[10px] font-bold hover:bg-white hover:text-[#363347] hover:border-white transition-colors duration-200"
+              >
+                PROCEED TO CHECKOUT
+              </button>
+            </Link>
           </div>
         </div>
       </div>
