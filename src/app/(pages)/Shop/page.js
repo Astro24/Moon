@@ -40,6 +40,7 @@ const Shop = () => {
         <span>/</span>
         <span className="text-black font-medium">Shop</span>
       </nav>
+      
 
       <div className="w-full mb-4 md:hidden flex flex-col gap-3">
         <div className="flex items-center justify-between">
