@@ -1,11 +1,11 @@
 'use client';
 
-import React from 'react';
+import React, { Suspense } from 'react'; 
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { RxFilter } from "react-icons/rx";
 
-const Shop = () => {
+const ShopContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -33,14 +33,12 @@ const Shop = () => {
 
   return (
     <div className="max-w-[1400px] mx-auto py-8 pl-4 md:pl-10 pr-6 font-sans">
-
       {/* Navigation */}
       <nav className="flex items-center gap-2 text-[13px] mb-6 text-gray-400">
         <span className="cursor-pointer hover:text-black" onClick={() => router.push('/')}>Home</span>
         <span>/</span>
         <span className="text-black font-medium">Shop</span>
       </nav>
-      
 
       <div className="w-full mb-4 md:hidden flex flex-col gap-3">
         <div className="flex items-center justify-between">
@@ -172,6 +170,15 @@ const Shop = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+
+const Shop = () => {
+  return (
+    <Suspense fallback={<div className="text-center py-20">Loading Shop...</div>}>
+      <ShopContent />
+    </Suspense>
   );
 };
 
