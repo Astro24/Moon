@@ -10,7 +10,7 @@ export default function ProjectPage() {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: 25 }}
           transition={{ type: "spring", stiffness: 300, damping: 15 }}
-          className="text-3xl font-semibold text-[#3A3845] ml-9 mt-15 max-md:text-2xl"
+          className="text-2xl sm:text-3xl font-semibold text-[#3A3845] ml-5 sm:ml-9 mt-10 sm:mt-15"
         >
           Cart
         </motion.h1>
