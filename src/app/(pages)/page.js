@@ -4,6 +4,7 @@ import Sales from "../components/home/Sales";
 import BestSellers from "../components/home/BestSellers";
 import History from "../components/home/History";
 import New from "../components/home/New";
+import OurBlog from "../components/home/OurBlog";
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
       <BestSellers />
       <History />
       <New />
+      <OurBlog />
     </main>
   );
 }
