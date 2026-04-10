@@ -9,7 +9,7 @@ export default function Newsletter() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.3 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="flex flex-col items-center text-center max-w-2xl mx-auto"
+        className="flex flex-col items-center text-center max-w-full mx-auto"
       >
         <p className="text-sm md:text-base text-[#3A3845] mb-4">
           Sign up for emails
