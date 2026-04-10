@@ -3,6 +3,7 @@ import Cat from "../components/home/Cat";
 import Sales from "../components/home/Sales";
 import BestSellers from "../components/home/BestSellers";
 import History from "../components/home/History";
+import New from "../components/home/New";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <Sales />
       <BestSellers />
       <History />
+      <New />
     </main>
   );
 }
