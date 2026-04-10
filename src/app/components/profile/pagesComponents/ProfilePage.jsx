@@ -7,7 +7,7 @@ import { MdEmail } from "react-icons/md";
 import { AiFillPicture } from "react-icons/ai";
 
 export default function ProjectPage() {
-  const [preview, setPreview] = useState("/images/profile/AvatarCircle.svg");
+  const [preview, setPreview] = useState("/profile/AvatarCircle.svg");
 
   const handleUpload = (event) => {
     const file = event.target.files?.[0];
@@ -90,7 +90,7 @@ export default function ProjectPage() {
                   </div>
                   <button
                     onClick={() =>
-                      setPreview("/images/profile/AvatarCircle.svg")
+                      setPreview("/profile/AvatarCircle.svg")
                     }
                     className="text-xs text-purple-400 hover:underline"
                   >
