@@ -5,7 +5,7 @@ import BestSellers from "../components/home/BestSellers";
 import History from "../components/home/History";
 import New from "../components/home/New";
 import OurBlog from "../components/home/OurBlog";
-import Newsletter from "../components/home/NewsLetter";
+import Newsletter from "../components/shared/NewsLetter";
 
 export default function Home() {
   return (
