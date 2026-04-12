@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -9,6 +9,20 @@ export default function Checkout() {
   const [selectedCountry, setSelectedCountry] = useState('');
   const [VisaOrMasterCard, setVisaOrMasterCard] = useState('');
   const router = useRouter();
+
+  const [products] = useState([
+    { id: 1, name: 'Porcelain Dinner Plate (27cm)', price: 59.00 },
+    { id: 2, name: 'Ophelia Matte Natural Vase', price: 168.00 },
+    { id: 3, name: 'Luana Bowl', price: 49.00 },
+  ]);
+
+  const shippingCost = 15.00;
+
+  const subtotal = useMemo(() => {
+    return products.reduce((acc, item) => acc + item.price, 0);
+  }, [products]);
+
+  const total = subtotal + shippingCost;
 
   const countryData = {
     US: [
@@ -40,6 +54,25 @@ export default function Checkout() {
       { code: 'BAHAH', name: 'Al-Bahah Region' },
       { code: 'JAWF', name: 'Al-Jawf Region' },
     ],
+    UAE: [
+      { code: 'AUH', name: 'Abu Dhabi' },
+      { code: 'DXB', name: 'Dubai' },
+      { code: 'SHJ', name: 'Sharjah' },
+      { code: 'AJM', name: 'Ajman' },
+      { code: 'UMM', name: 'Umm Al-Quwain' },
+      { code: 'RAK', name: 'Ras Al Khaimah' },
+      { code: 'FUJ', name: 'Fujairah' },
+    ],
+    MR: [
+      { code: 'NKC', name: 'Nouakchott' },
+      { code: 'NDB', name: 'Nouadhibou' },
+      { code: 'KED', name: 'Kaédi' },
+      { code: 'ZOU', name: 'Zouérat' },
+      { code: 'ROS', name: 'Rosso' },
+      { code: 'AIO', name: 'Atar' },
+      { code: 'EMN', name: 'Néma' },
+
+    ]
   }
 
   const regions = countryData[selectedCountry] || [];
@@ -50,16 +83,20 @@ export default function Checkout() {
     const formData = new FormData(e.currentTarget);
     const orderData = Object.fromEntries(formData.entries());
 
+    orderData.paymentMethod = paymentMethod;
     localStorage.setItem('recentOrder', JSON.stringify(orderData));
 
     router.push('/OrderDetails');
   };
+
   const VorM = (e) => {
     const value = e.target.value.replace(/\s+/g, '');
     if (/^4/.test(value)) {
       setVisaOrMasterCard('Visa')
     } else if (/^(5[1-5]|2[2-7])/.test(value)) {
       setVisaOrMasterCard('Mastercard')
+    } else if (/^(588845|440647|440795|446404|457865|457997|474491|588846)/.test(value)) {
+      setVisaOrMasterCard('Mada')
     } else {
       setVisaOrMasterCard('');
     }
@@ -103,6 +140,8 @@ export default function Checkout() {
                 <option value="">Select a country</option>
                 <option value="US">United States</option>
                 <option value="SA">Saudi Arabia</option>
+                <option value="UAE">United Arab Emirates</option>
+                <option value="MR">mauritania</option>
               </select>
             </div>
             <div className="col-span-2">
@@ -155,34 +194,28 @@ export default function Checkout() {
               <span>Subtotal</span>
             </div>
             <div className="space-y-3 text-gray-700">
-              <div className="flex justify-between">
-                <span>Porcelain Dinner Plate (27cm)</span>
-                <span>$59.00</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Ophelia Matte Natural Vase</span>
-                <span>$168.00</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Luana Bowl</span>
-                <span>$49.00</span>
-              </div>
+              {products.map((item) => (
+                <div key={item.id} className="flex justify-between">
+                  <span>{item.name}</span>
+                  <span>${item.price.toFixed(2)}</span>
+                </div>
+              ))}
             </div>
 
             <div className="border-t border-gray-200 mt-6 pt-4 space-y-2">
               <div className="flex justify-between font-bold">
                 <span>Subtotal</span>
-                <span>$475.00</span>
+                <span>${subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Shipping</span>
-                <span>$15.00</span>
+                <span>${shippingCost.toFixed(2)}</span>
               </div>
             </div>
 
             <div className="flex justify-between items-center border-t-2 border-black mt-6 pt-4 text-xl font-bold">
               <span>Total</span>
-              <span>$490.00</span>
+              <span>${total.toFixed(2)}</span>
             </div>
           </div>
 
@@ -195,7 +228,7 @@ export default function Checkout() {
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input
                       type="radio"
-                      name="payment"
+                      name="paymentMethod"
                       value="card"
                       checked={paymentMethod === 'card'}
                       onChange={() => setPaymentMethod('card')}
@@ -220,11 +253,10 @@ export default function Checkout() {
                         type="text"
                         placeholder="Card number"
                         required={paymentMethod === 'card'}
-                        onChange={VorM} // 2. Trigger the detection logic
+                        onChange={VorM}
                         className="w-full bg-transparent border border-gray-500 p-3 text-sm focus:outline-none focus:border-white rounded"
                       />
 
-                      {/* 3. This will now show up inside the input field on the right side */}
                       {VisaOrMasterCard && (
                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold uppercase text-white opacity-80 bg-black/20 px-1 rounded">
                           {VisaOrMasterCard}
@@ -288,7 +320,7 @@ export default function Checkout() {
             </div>
 
             <button type="submit" className="w-full border border-white py-4 mt-6 text-sm font-bold tracking-widest hover:bg-white hover:text-[#32333d] transition-colors">
-              PLACE ORDER
+              PLACE ORDER (${total.toFixed(2)})
             </button>
           </div>
         </div>
