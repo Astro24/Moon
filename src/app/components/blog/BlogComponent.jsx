@@ -1,8 +1,19 @@
 "use client";
+import { useState } from "react";
 import Image from "next/image";
 import BlogPosts from "./BlogPosts";
+import Pagination from "../shared/Pagination";
+import { posts } from "../../../../lib/data";
+
+const POSTS_PER_PAGE = 6;
 
 export default function BlogComponent() {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
+  const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+  const visiblePosts = posts.slice(startIndex, startIndex + POSTS_PER_PAGE);
+
   return (
     <div className="bg-gray-100 text-gray-800 font-serif">
       {/* Hero */}
@@ -17,7 +28,7 @@ export default function BlogComponent() {
         </div>
         <div className="flex flex-col justify-center p-10">
           <h2 className="text-3xl font-semibold mb-4 tracking-wide">
-            WHAT’S IN A GARDEN SET?
+            WHAT&apos;S IN A GARDEN SET?
           </h2>
           <p className="text-gray-600 text-sm leading-relaxed">
             Maecenas ornare mi non risus viverra, vulputate aliquam nisi. Nunc
@@ -30,37 +41,14 @@ export default function BlogComponent() {
       <div className="grid md:grid-cols-3 gap-8 p-10">
         {/* Posts */}
         <div className="md:col-span-2 grid md:grid-cols-2 gap-6">
-          <BlogPosts variant="grid" />
+          <BlogPosts variant="grid" posts={visiblePosts} />
 
-          {/* Pagination */}
-          <div className="col-span-2 flex justify-center mt-8">
-            <div className="flex items-center gap-2 text-sm">
-              <button className="w-8 h-8 flex items-center justify-center border rounded-md hover:bg-gray-200">
-                ←
-              </button>
-
-              <button className="w-8 h-8 flex items-center justify-center rounded-md bg-black text-white">
-                1
-              </button>
-
-              <button className="w-8 h-8 flex items-center justify-center border rounded-md hover:bg-gray-200">
-                2
-              </button>
-
-              <button className="w-8 h-8 flex items-center justify-center border rounded-md hover:bg-gray-200">
-                3
-              </button>
-
-              <span className="px-2 text-gray-400">...</span>
-
-              <button className="w-8 h-8 flex items-center justify-center border rounded-md hover:bg-gray-200">
-                9
-              </button>
-
-              <button className="w-8 h-8 flex items-center justify-center border rounded-md hover:bg-gray-200">
-                →
-              </button>
-            </div>
+          <div className="col-span-2">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
           </div>
         </div>
 

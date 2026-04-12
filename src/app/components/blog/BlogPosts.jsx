@@ -1,8 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
-import { posts } from "../../../../lib/data";
+import { posts as allPosts  } from "../../../../lib/data";
 
-export default function BlogPosts({ variant = "grid" }) {
+export default function BlogPosts({ variant = "grid", posts = allPosts }) {
   if (variant === "compact") {
     return (
       <div className="bg-white p-4 rounded-xl shadow-sm">
