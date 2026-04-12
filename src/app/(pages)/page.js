@@ -1,22 +1,21 @@
 import Hero from "@/app/components/home/Hero";
 import Cat from "../components/home/Cat";
-import Sales from "../components/home/Sales";
 import BestSellers from "../components/home/BestSellers";
 import History from "../components/home/History";
 import New from "../components/home/New";
-import OurBlog from "../components/home/OurBlog";
 import Newsletter from "../components/shared/NewsLetter";
+import InfoHomePage from "../components/home/Info";
 
 export default function Home() {
   return (
     <main>
       <Hero />
       <Cat />
-      <Sales />
+      <InfoHomePage variant="sales" />
       <BestSellers />
       <History />
       <New />
-      <OurBlog />
+      <InfoHomePage variant="ourBlog" />
       <Newsletter />
     </main>
   );
