@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { CiTrash } from "react-icons/ci";
-import Link from "next/link"; 
+import Link from "next/link";
 
 const initialCartItems = [
   {
@@ -37,8 +37,8 @@ export default function Cart() {
   const increaseQuantity = (id) => {
     setCartItems((prev) =>
       prev.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-      )
+        item.id === id ? { ...item, quantity: item.quantity + 1 } : item,
+      ),
     );
   };
 
@@ -47,8 +47,8 @@ export default function Cart() {
       prev.map((item) =>
         item.id === id && item.quantity > 1
           ? { ...item, quantity: item.quantity - 1 }
-          : item
-      )
+          : item,
+      ),
     );
   };
 
@@ -58,7 +58,7 @@ export default function Cart() {
 
   const subtotal = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
-    0
+    0,
   );
 
   return (
@@ -134,7 +134,9 @@ export default function Cart() {
             </div>
 
             <div className="flex items-center justify-between md:block order-3 md:order-none">
-              <span className="md:hidden text-[13px] text-[#8b8b8b]">Price</span>
+              <span className="md:hidden text-[13px] text-[#8b8b8b]">
+                Price
+              </span>
               <span className="text-[14px] font-semibold text-[#303030]">
                 ${item.price}
               </span>
