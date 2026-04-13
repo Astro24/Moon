@@ -5,16 +5,16 @@ import History from "../components/home/History";
 import New from "../components/home/New";
 import Newsletter from "../components/shared/NewsLetter";
 import InfoHomePage from "../components/home/Info";
-
+import Products from "../components/shared/Products";
 export default function Home() {
   return (
     <main>
       <Hero />
       <Cat />
       <InfoHomePage variant="sales" />
-      <BestSellers />
+      <Products filter="bestSeller" title={"Best Seller"} limit={8} />
       <History />
-      <New />
+      <Products filter="new" title={"Discover new arrivals"} limit={8} />
       <InfoHomePage variant="ourBlog" />
       <Newsletter />
     </main>
