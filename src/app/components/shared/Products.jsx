@@ -7,12 +7,7 @@ import { products } from "../../../../lib/data";
 import { useCart } from "@/app/contexts/CartContext";
 import { useFavorites } from "@/app/contexts/FavoritesContext";
 
-export default function Products({
-  filter = "all",
-  limit,
-  title,
-  items,
-}) {
+export default function Products({ filter = "all", limit, title, items }) {
   const { addToCart } = useCart();
   const { toggleFavorite, isFavorite } = useFavorites();
 
@@ -56,7 +51,7 @@ export default function Products({
         </motion.div>
       )}
 
-      <div className="mt-15 flex justify-center items-center gap-6 md:gap-20 flex-wrap px-6 md:px-30">
+      <div className="mt-15 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 md:gap-8 px-6 md:px-10">
         {visibleProducts.map((p, i) => {
           const favorited = isFavorite(p.id);
 
@@ -71,7 +66,7 @@ export default function Products({
                 ease: "easeOut",
                 delay: i * 0.05,
               }}
-              className="flex justify-center items-start flex-col h-auto md:h-160 w-[calc(50%-12px)] md:w-auto md:max-w-65 relative"
+              className="flex justify-center items-start flex-col h-auto md:h-160 w-full relative"
             >
               {/* Favorite heart */}
               <button
