@@ -51,7 +51,7 @@ export default function Products({ filter = "all", limit, title, items }) {
         </motion.div>
       )}
 
-      <div className="mt-15 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 md:gap-8 px-6 md:px-10">
+      <div className="mt-5 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 md:gap-8 px-6 md:px-10">
         {visibleProducts.map((p, i) => {
           const favorited = isFavorite(p.id);
 

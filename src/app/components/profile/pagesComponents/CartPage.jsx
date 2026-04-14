@@ -1,5 +1,7 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
+import CartItems from "../../shared/CartItems";
+import Pagination from "../../shared/Pagination";
 
 export default function ProjectPage() {
   return (
@@ -24,8 +26,8 @@ export default function ProjectPage() {
           transition={{ type: "spring", stiffness: 400, damping: 20 }}
           className="flex flex-col items-center w-full p-10 text-start"
         >
-          <div className="bg-white h-130 w-full rounded-2xl shadow-md">
-            <h1>Cart</h1>
+          <div className="bg-white h-130 w-full rounded-2xl shadow-md p-5">
+            <CartItems />
           </div>
         </motion.div>
       </AnimatePresence>
