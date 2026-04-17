@@ -1,18 +1,106 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 export default function Checkout() {
   const [paymentMethod, setPaymentMethod] = useState('card');
+  const [selectedCountry, setSelectedCountry] = useState('');
+  const [VisaOrMasterCard, setVisaOrMasterCard] = useState('');
   const router = useRouter();
+
+  const [products] = useState([
+    { id: 1, name: 'Porcelain Dinner Plate (27cm)', price: 59.00 },
+    { id: 2, name: 'Ophelia Matte Natural Vase', price: 168.00 },
+    { id: 3, name: 'Luana Bowl', price: 49.00 },
+  ]);
+
+  const shippingCost = 15.00;
+
+  const subtotal = useMemo(() => {
+    return products.reduce((acc, item) => acc + item.price, 0);
+  }, [products]);
+
+  const total = subtotal + shippingCost;
+
+  const countryData = {
+    US: [
+      { code: 'NY', name: 'New York' },
+      { code: 'CA', name: 'California' },
+      { code: 'TX', name: 'Texas' },
+      { code: 'FL', name: 'Florida' },
+      { code: 'IL', name: 'Illinois' },
+      { code: 'PA', name: 'Pennsylvania' },
+      { code: 'OH', name: 'Ohio' },
+      { code: 'GA', name: 'Georgia' },
+      { code: 'NC', name: 'North Carolina' },
+      { code: 'MI', name: 'Michigan' },
+      { code: 'NJ', name: 'New Jersey' },
+      { code: 'VA', name: 'Virginia' },
+    ],
+    SA: [
+      { code: 'RIY', name: 'Riyadh Region' },
+      { code: 'MAKKAH', name: 'Makkah Region' },
+      { code: 'EASTERN', name: 'Eastern Province' },
+      { code: 'ASIR', name: 'Asir Region' },
+      { code: 'HAIL', name: 'Hail Region' },
+      { code: 'MADINAH', name: 'Madinah Region' },
+      { code: 'QASSIM', name: 'Al-Qassim Region' },
+      { code: 'TABUK', name: 'Tabuk Region' },
+      { code: 'NORTHERN', name: 'Northern Borders Region' },
+      { code: 'JIZAN', name: 'Jazan Region' },
+      { code: 'NAJRAN', name: 'Najran Region' },
+      { code: 'BAHAH', name: 'Al-Bahah Region' },
+      { code: 'JAWF', name: 'Al-Jawf Region' },
+    ],
+    UAE: [
+      { code: 'AUH', name: 'Abu Dhabi' },
+      { code: 'DXB', name: 'Dubai' },
+      { code: 'SHJ', name: 'Sharjah' },
+      { code: 'AJM', name: 'Ajman' },
+      { code: 'UMM', name: 'Umm Al-Quwain' },
+      { code: 'RAK', name: 'Ras Al Khaimah' },
+      { code: 'FUJ', name: 'Fujairah' },
+    ],
+    MR: [
+      { code: 'NKC', name: 'Nouakchott' },
+      { code: 'NDB', name: 'Nouadhibou' },
+      { code: 'KED', name: 'Kaédi' },
+      { code: 'ZOU', name: 'Zouérat' },
+      { code: 'ROS', name: 'Rosso' },
+      { code: 'AIO', name: 'Atar' },
+      { code: 'EMN', name: 'Néma' },
+
+    ]
+  }
+
+  const regions = countryData[selectedCountry] || [];
 
   const handlePlaceOrder = (e) => {
     e.preventDefault();
 
-    router.push('/order-confirmation');
+    const formData = new FormData(e.currentTarget);
+    const orderData = Object.fromEntries(formData.entries());
+
+    orderData.paymentMethod = paymentMethod;
+    localStorage.setItem('recentOrder', JSON.stringify(orderData));
+
+    router.push('/OrderDetails');
   };
+
+  const VorM = (e) => {
+    const value = e.target.value.replace(/\s+/g, '');
+    if (/^4/.test(value)) {
+      setVisaOrMasterCard('Visa')
+    } else if (/^(5[1-5]|2[2-7])/.test(value)) {
+      setVisaOrMasterCard('Mastercard')
+    } else if (/^(588845|440647|440795|446404|457865|457997|474491|588846)/.test(value)) {
+      setVisaOrMasterCard('Mada')
+    } else {
+      setVisaOrMasterCard('');
+    }
+  }
 
   return (
     <div className="max-w-6xl mx-auto p-6 font-sans">
@@ -23,7 +111,6 @@ export default function Checkout() {
         <span className="text-black font-semibold underline">Payment</span>
       </div>
 
-      {/* Changed the main wrapper to a form to handle validation globally */}
       <form onSubmit={handlePlaceOrder} className="grid grid-cols-1 lg:grid-cols-12 gap-16">
 
         <div className="lg:col-span-7">
@@ -31,55 +118,71 @@ export default function Checkout() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block mb-1">First Name *</label>
-              <input type="text" placeholder="Samatha" className="input border-2 border-black w-full bg-white rounded-none focus:outline-none" required />
+              <input name="firstName" type="text" placeholder="Samatha" className="input border-2 border-black w-full bg-white rounded-none focus:outline-none" required />
             </div>
             <div>
               <label className="block mb-1">Last Name *</label>
-              <input type="text" placeholder="Clarken" className="input border-2 border-black w-full bg-white rounded-none focus:outline-none" required />
+              <input name="lastName" type="text" placeholder="Clarken" className="input border-2 border-black w-full bg-white rounded-none focus:outline-none" required />
             </div>
             <div className="col-span-2">
               <label className="block mb-1">Company</label>
-              <input type="text" placeholder="Moon" className="input border-2 border-black w-full bg-white rounded-none focus:outline-none" />
+              <input name="company" type="text" placeholder="Moon" className="input border-2 border-black w-full bg-white rounded-none focus:outline-none" />
             </div>
             <div className="col-span-2">
               <label className="block mb-1">Country / Region *</label>
-              <select className="select border-2 border-black w-full bg-white rounded-none focus:outline-none" required>
+              <select
+                name="country"
+                className="select border-2 border-black w-full bg-white rounded-none focus:outline-none"
+                required
+                value={selectedCountry}
+                onChange={(e) => setSelectedCountry(e.target.value)}
+              >
                 <option value="">Select a country</option>
                 <option value="US">United States</option>
                 <option value="SA">Saudi Arabia</option>
+                <option value="UAE">United Arab Emirates</option>
+                <option value="MR">mauritania</option>
               </select>
             </div>
             <div className="col-span-2">
               <label className="block mb-1">Street address *</label>
-              <input type="text" placeholder="Address" className="input border-2 border-black w-full bg-white rounded-none focus:outline-none" required />
+              <input name="address" type="text" placeholder="Address" className="input border-2 border-black w-full bg-white rounded-none focus:outline-none" required />
             </div>
             <div className="col-span-1">
               <label className="block mb-1">Town / City *</label>
-              <input type="text" placeholder="City" className="input border-2 border-black w-full bg-white rounded-none focus:outline-none" required />
+              <input name="city" type="text" placeholder="City" className="input border-2 border-black w-full bg-white rounded-none focus:outline-none" required />
             </div>
             <div className="col-span-1">
-              <label className="block mb-1">State *</label>
-              <select className="select border-2 border-black w-full bg-white rounded-none focus:outline-none" required>
+              <label className="block mb-1">State / Region *</label>
+              <select
+                name='state'
+                className="select border-2 border-black w-full bg-white rounded-none focus:outline-none"
+                required
+                disabled={!selectedCountry}
+              >
                 <option value="">Select a state</option>
-                <option value="NY">New York (NY)</option>
-                <option value="CA">California (CA)</option>
+                {regions.map((region) => (
+                  <option key={region.code} value={region.code}>
+                    {region.name}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="col-span-1">
               <label className="block mb-1">ZIP Code</label>
-              <input type="text" placeholder="Zip code" className="input border-2 border-black w-full bg-white rounded-none focus:outline-none" required />
+              <input name='ZIPcode' type="text" placeholder="Zip code" className="input border-2 border-black w-full bg-white rounded-none focus:outline-none" />
             </div>
             <div className="col-span-1">
               <label className="block mb-1">Phone *</label>
-              <input type="tel" placeholder="(123) 456 - 7890" className="input border-2 border-black w-full bg-white rounded-none focus:outline-none" required />
+              <input name='phone' type="tel" placeholder="(123) 456 - 7890" className="input border-2 border-black w-full bg-white rounded-none focus:outline-none" required />
             </div>
             <div className="col-span-2">
               <label className="block mb-1">Email</label>
-              <input type="email" placeholder="example@youremail.com" className="input border-2 border-black w-full bg-white rounded-none focus:outline-none" required />
+              <input name='email' type="email" placeholder="example@youremail.com" className="input border-2 border-black w-full bg-white rounded-none focus:outline-none" required />
             </div>
             <div className="col-span-2">
               <label className="block mb-1">Order notes</label>
-              <textarea placeholder="Type your message here..." className="textarea border-2 border-black w-full bg-white rounded-none focus:outline-none h-32"></textarea>
+              <textarea name='note' placeholder="Type your message here..." className="textarea border-2 border-black w-full bg-white rounded-none focus:outline-none h-32"></textarea>
             </div>
           </div>
         </div>
@@ -91,34 +194,28 @@ export default function Checkout() {
               <span>Subtotal</span>
             </div>
             <div className="space-y-3 text-gray-700">
-              <div className="flex justify-between">
-                <span>Porcelain Dinner Plate (27cm)</span>
-                <span>$59.00</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Ophelia Matte Natural Vase</span>
-                <span>$168.00</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Luana Bowl</span>
-                <span>$49.00</span>
-              </div>
+              {products.map((item) => (
+                <div key={item.id} className="flex justify-between">
+                  <span>{item.name}</span>
+                  <span>${item.price.toFixed(2)}</span>
+                </div>
+              ))}
             </div>
 
             <div className="border-t border-gray-200 mt-6 pt-4 space-y-2">
               <div className="flex justify-between font-bold">
                 <span>Subtotal</span>
-                <span>$475.00</span>
+                <span>${subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Shipping</span>
-                <span>$15.00</span>
+                <span>${shippingCost.toFixed(2)}</span>
               </div>
             </div>
 
             <div className="flex justify-between items-center border-t-2 border-black mt-6 pt-4 text-xl font-bold">
               <span>Total</span>
-              <span>$490.00</span>
+              <span>${total.toFixed(2)}</span>
             </div>
           </div>
 
@@ -131,7 +228,7 @@ export default function Checkout() {
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input
                       type="radio"
-                      name="payment"
+                      name="paymentMethod"
                       value="card"
                       checked={paymentMethod === 'card'}
                       onChange={() => setPaymentMethod('card')}
@@ -150,14 +247,25 @@ export default function Checkout() {
 
                 {paymentMethod === 'card' && (
                   <div className="space-y-4">
+                    <div className="relative">
+                      <input
+                        name="cardNumber"
+                        type="text"
+                        placeholder="Card number"
+                        required={paymentMethod === 'card'}
+                        onChange={VorM}
+                        className="w-full bg-transparent border border-gray-500 p-3 text-sm focus:outline-none focus:border-white rounded"
+                      />
+
+                      {VisaOrMasterCard && (
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold uppercase text-white opacity-80 bg-black/20 px-1 rounded">
+                          {VisaOrMasterCard}
+                        </span>
+                      )}
+                    </div>
                     <input
                       type="text"
-                      placeholder="Card number"
-                      required={paymentMethod === 'card'}
-                      className="w-full bg-transparent border border-gray-500 p-3 text-sm focus:outline-none focus:border-white rounded"
-                    />
-                    <input
-                      type="text"
+                      name="cardName"
                       placeholder="Name on card"
                       required={paymentMethod === 'card'}
                       className="w-full bg-transparent border border-gray-500 p-3 text-sm focus:outline-none focus:border-white rounded"
@@ -188,7 +296,7 @@ export default function Checkout() {
                 <label className="flex items-center gap-3 cursor-pointer">
                   <input
                     type="radio"
-                    name="payment"
+                    name="paymentMethod"
                     value="stc"
                     checked={paymentMethod === 'stc'}
                     onChange={() => setPaymentMethod('stc')}
@@ -200,6 +308,7 @@ export default function Checkout() {
                 {paymentMethod === 'stc' && (
                   <div className="mt-4">
                     <input
+                      name="stcPhoneNumber"
                       type="tel"
                       placeholder="Phone Number"
                       required={paymentMethod === 'stc'}
@@ -211,7 +320,7 @@ export default function Checkout() {
             </div>
 
             <button type="submit" className="w-full border border-white py-4 mt-6 text-sm font-bold tracking-widest hover:bg-white hover:text-[#32333d] transition-colors">
-              PLACE ORDER
+              PLACE ORDER (${total.toFixed(2)})
             </button>
           </div>
         </div>
