@@ -64,7 +64,7 @@ export default function Products({
         </motion.div>
       )}
 
-      <div className={`mt-5 grid ${gridClass} gap-6 md:gap-8 px-6 md:px-10`}>
+      <div className={`mt-10 grid ${gridClass} gap-6 md:gap-8 px-6 md:px-10`}>
         {visibleProducts.map((p, i) => {
           const favorited = isFavorite(p.id);
 
@@ -126,7 +126,7 @@ export default function Products({
               </Link>
               <p className="text-sm md:text-lg font-bold">${p.price}.00</p>
 
-              <p className="w-full text-[#807F86] text-xs md:text-sm mt-2 md:mt-3 line-clamp-2">
+              <p className="w-full text-[#807F86] text-xs md:text-sm mt-2 md:mt-3 line-clamp-2 flex-1">
                 {p.desc}
               </p>
 
@@ -139,7 +139,7 @@ export default function Products({
                   color: "#ffffff",
                 }}
                 whileTap={{ scale: 1 }}
-                className="w-full border py-2 md:py-3 mt-auto font-bold text-[10px] tracking-[0.2em] uppercase cursor-pointer"
+                className="w-full border py-3 mt-4 md:mt-6 font-bold text-[10px] tracking-[0.2em] uppercase cursor-pointer"
               >
                 Add to cart
               </motion.button>

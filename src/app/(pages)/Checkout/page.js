@@ -8,21 +8,35 @@ import Payment from "@/app/components/checkout/Payment";
 
 export default function Checkout() {
   const router = useRouter();
-  const { cart, clearCart } = useCart();
+  const { cart, clearCart, subtotal } = useCart();
 
   const handlePlaceOrder = (e) => {
     e.preventDefault();
 
+    if (cart.length === 0) {
+      alert("Your cart is empty!");
+      return;
+    }
+
     const formData = new FormData(e.currentTarget);
     const orderData = Object.fromEntries(formData.entries());
 
-    // Save order with cart items for the order details page
-    orderData.items = cart;
+    orderData.items = [...cart]; 
+    orderData.subtotal = subtotal;
+    orderData.orderId = `ORD-${Date.now()}`;
+    orderData.orderDate = new Date().toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+
     localStorage.setItem("recentOrder", JSON.stringify(orderData));
 
-    // Clear the cart after placing the order
-    clearCart();
+    const existingHistory = JSON.parse(localStorage.getItem("HistoryOrders") || "[]");
+    const updatedHistory = [orderData, ...existingHistory]; // Newest first
+    localStorage.setItem("HistoryOrders", JSON.stringify(updatedHistory));
 
+    clearCart();
     router.push("/OrderDetails");
   };
 
