@@ -7,7 +7,18 @@ import { products } from "../../../../lib/data";
 import { useCart } from "@/app/contexts/CartContext";
 import { useFavorites } from "@/app/contexts/FavoritesContext";
 
-export default function Products({ filter = "all", limit, title, items }) {
+const columnStyles = {
+  3: "grid-cols-2 md:grid-cols-3 lg:grid-cols-3",
+  4: "grid-cols-2 md:grid-cols-3 lg:grid-cols-4",
+};
+
+export default function Products({
+  filter = "all",
+  limit,
+  title,
+  items,
+  columns = 4,
+}) {
   const { addToCart } = useCart();
   const { toggleFavorite, isFavorite } = useFavorites();
 
@@ -35,6 +46,8 @@ export default function Products({ filter = "all", limit, title, items }) {
     );
   }
 
+  const gridClass = columnStyles[columns] || columnStyles[4];
+
   return (
     <section>
       {title && (
@@ -51,7 +64,7 @@ export default function Products({ filter = "all", limit, title, items }) {
         </motion.div>
       )}
 
-      <div className="mt-5 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 md:gap-8 px-6 md:px-10">
+      <div className={`mt-5 grid ${gridClass} gap-6 md:gap-8 px-6 md:px-10`}>
         {visibleProducts.map((p, i) => {
           const favorited = isFavorite(p.id);
 
@@ -66,24 +79,30 @@ export default function Products({ filter = "all", limit, title, items }) {
                 ease: "easeOut",
                 delay: i * 0.05,
               }}
-              className="flex justify-center items-start flex-col h-auto md:h-160 w-full relative"
+              className="flex items-start flex-col w-full relative h-full"
             >
               {/* Favorite heart */}
               <button
                 onClick={() => toggleFavorite(p)}
+                aria-label={
+                  favorited ? "Remove from favorites" : "Add to favorites"
+                }
                 className="absolute top-3 right-3 z-10 p-2 cursor-pointer"
               >
                 {favorited ? (
-                  <FaHeart className="text-red-500 text-3xl md:text-lx" />
+                  <FaHeart size={30} className="text-red-500" />
                 ) : (
-                  <FaRegHeart className="text-gray-600 hover:text-red-500 text-3xl md:text-lx transition-colors" />
+                  <FaRegHeart
+                    size={30}
+                    className="text-gray-600 hover:text-red-500 transition-colors"
+                  />
                 )}
               </button>
 
-              {/* Image wrapper */}
+              {/* Image */}
               <Link
                 href={`/Shop/${p.id}`}
-                className="overflow-hidden w-full block"
+                className="overflow-hidden w-full block bg-[#f7f4ef]"
               >
                 <motion.div
                   whileHover={{ scale: 1.05 }}
@@ -94,7 +113,7 @@ export default function Products({ filter = "all", limit, title, items }) {
                     width={400}
                     height={400}
                     alt={p.name}
-                    className="w-full h-50 sm:h-60 md:h-100 object-cover"
+                    className="w-full aspect-4/5 object-contain"
                   />
                 </motion.div>
               </Link>
@@ -107,11 +126,11 @@ export default function Products({ filter = "all", limit, title, items }) {
               </Link>
               <p className="text-sm md:text-lg font-bold">${p.price}.00</p>
 
-              <p className="w-full md:w-70 text-[#807F86] text-xs md:text-sm mt-2 md:mt-3 line-clamp-2">
+              <p className="w-full text-[#807F86] text-xs md:text-sm mt-2 md:mt-3 line-clamp-2">
                 {p.desc}
               </p>
 
-              {/* Add to cart button */}
+              {/* Add to cart */}
               <motion.button
                 onClick={() => addToCart(p)}
                 whileHover={{
@@ -120,7 +139,7 @@ export default function Products({ filter = "all", limit, title, items }) {
                   color: "#ffffff",
                 }}
                 whileTap={{ scale: 1 }}
-                className="w-full border py-2 md:py-3 mt-10 md:mt-auto font-bold text-[10px] tracking-[0.2em] uppercase cursor-pointer"
+                className="w-full border py-2 md:py-3 mt-auto font-bold text-[10px] tracking-[0.2em] uppercase cursor-pointer"
               >
                 Add to cart
               </motion.button>

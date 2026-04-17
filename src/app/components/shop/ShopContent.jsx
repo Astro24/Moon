@@ -134,7 +134,7 @@ export default function ShopContent() {
 
         {/* Main product area */}
         <div className="flex-1 flex flex-col w-full">
-          <Products items={visibleProducts} />
+          <Products items={visibleProducts} columns={3} />
 
           <Pagination
             currentPage={currentPage}
