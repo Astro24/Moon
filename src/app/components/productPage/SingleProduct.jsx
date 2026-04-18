@@ -344,7 +344,7 @@ export default function SingleProduct() {
           <h1 className="uppercase font-garamond font-bold text-3xl px-12">
             Similar Items
           </h1>
-          <Products items={similarProducts} limit={3} />
+          <Products items={similarProducts} limit={4} />
         </div>
       )}
     </div>
