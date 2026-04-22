@@ -11,7 +11,6 @@ export default function NavBar() {
     { href: "/Profile/order-history", label: "Order History" },
     { href: "/Profile/favorites", label: "Favorites" },
     { href: "/Profile/cart", label: "Cart" },
-    { href: "/Profile/shipping-address", label: "Shipping Address" },
     { href: "/Profile/settings", label: "Settings" },
   ];
 
