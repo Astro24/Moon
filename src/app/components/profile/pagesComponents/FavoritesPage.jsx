@@ -1,5 +1,6 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
+import FavoritesContent from "../../favorites/FavoritesCotent";
 
 export default function FavoritesPage() {
   return (
@@ -20,12 +21,12 @@ export default function FavoritesPage() {
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          eyit={{ opacity: 0, y: -40 }}
+          exit={{ opacity: 0, y: -40 }}
           transition={{ type: "spring", stiffness: 400, damping: 20 }}
-          className="flex flex-col items-center w-full p-10 text-start"
+          className="flex flex-col items-center w-full p-4 sm:p-10 text-start"
         >
-          <div className="bg-white h-130 w-full rounded-2xl shadow-md">
-            <h1>FavoritesPage</h1>
+          <div className="bg-white w-full rounded-2xl shadow-md">
+            <FavoritesContent itemsPerPage={3} showBreadcrumb={false} />
           </div>
         </motion.div>
       </AnimatePresence>

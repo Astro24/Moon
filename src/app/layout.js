@@ -1,5 +1,7 @@
 import { Geist, Geist_Mono, EB_Garamond } from "next/font/google";
 import "./styles/globals.css";
+import { CartProvider } from "./contexts/CartContext";
+import { FavoritesProvider } from "./contexts/FavoritesContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -11,9 +13,8 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// layout.js
 const ebGaramond = EB_Garamond({
-  variable: "--font-eb-garamond", 
+  variable: "--font-eb-garamond",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
 });
@@ -29,7 +30,11 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${ebGaramond.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <CartProvider>
+          <FavoritesProvider>{children}</FavoritesProvider>
+        </CartProvider>
+      </body>
     </html>
   );
 }

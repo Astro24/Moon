@@ -1,33 +1,61 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import Pagination from "../../shared/Pagination";
 
-const items = [
-  {
-    name: "Porcelain Dinner Plate (27cm)",
-    img: "/profile/plate.svg",
-    price: "$59",
-    qty: 2,
-    subtotal: "$118",
-  },
-  {
-    name: "Ophelia Matte Natural Vase",
-    img: "/profile/valo-matte-white-vase.svg",
-    price: "$168",
-    qty: 1,
-    subtotal: "$168",
-  },
-  {
-    name: "Porcelain Dinner Plate",
-    img: "/profile/julo-blue-salad-plate.svg",
-    price: "$70",
-    qty: 1,
-    subtotal: "$70",
-  },
-];
-
-// TODO: Add functionality to this page
 export default function OrdersHistoryPage() {
+  const [order, setOrder] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const itemsPerPage = 3;
+  const totalPages = order ? Math.ceil(order.length / itemsPerPage) : 0;
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentItems = order
+    ? order.slice(startIndex, startIndex + itemsPerPage)
+    : [];
+
+  useEffect(() => {
+    const savedHistory = localStorage.getItem("HistoryOrders");
+    if (savedHistory) {
+      const allOrders = JSON.parse(savedHistory);
+
+      // REFACTOR: flatten all orders into individual items with unique IDs.
+      // Each historyId combines orderId + itemId + index + random string
+      // to guarantee uniqueness even if the same product appears in
+      // multiple orders. Could use UUID package later but this works.
+      const itemsWithUniqueIds = allOrders.flatMap((order) =>
+        order.items.map((item, idx) => ({
+          ...item,
+          historyId: `${order.orderId}-${item.id}-${idx}-${Math.random().toString(36).substr(2, 9)}`,
+          orderDate: order.orderDate,
+        })),
+      );
+
+      setOrder(itemsWithUniqueIds);
+    }
+  }, []);
+
+  if (!order || order.length === 0) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-center px-4">
+        <div>
+          <h1 className="text-2xl font-bold mb-4">No orders yet</h1>
+          <p className="text-gray-500 mb-6">
+            Place an order first to see your order history.
+          </p>
+          <Link
+            href="/Shop"
+            className="inline-block bg-[#363347] text-white px-8 py-3 text-[11px] font-bold tracking-[0.2em] uppercase hover:bg-[#4a465f] transition-colors"
+          >
+            Browse Shop
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <section className="overflow-hidden">
       <AnimatePresence>
@@ -46,16 +74,16 @@ export default function OrdersHistoryPage() {
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          eyit={{ opacity: 0, y: -40 }}
+          exit={{ opacity: 0, y: -40 }}
           transition={{ type: "spring", stiffness: 400, damping: 20 }}
-          className="flex flex-col items-center w-full p-10 text-start"
+          className="flex flex-col items-center w-full p-4 sm:p-10 text-start"
         >
           <div className="bg-white w-full rounded-2xl shadow-md">
-            {/* Desktop: table */}
+            {/* Desktop: table layout */}
             <div className="hidden md:block overflow-x-auto">
               <table className="table p-4">
                 <thead>
-                  <tr className="bg-base-200 text-white font-bold">
+                  <tr className="bg-[#363347] text-white font-bold">
                     <th>Photo</th>
                     <td>Product</td>
                     <td>Price</td>
@@ -64,36 +92,38 @@ export default function OrdersHistoryPage() {
                   </tr>
                 </thead>
                 <tbody className="[&_td]:border-b [&_td]:border-gray-300 [&_th]:border-b [&_th]:border-gray-300">
-                  {items.map((item) => (
-                    <tr key={item.name}>
-                      <th>
+                  {currentItems.map((item) => (
+                    <tr key={item.historyId}>
+                      <td>
                         <Image
-                          src={item.img}
+                          src={item.image}
                           width={120}
                           height={180}
                           alt={item.name}
                         />
-                      </th>
+                      </td>
                       <td>{item.name}</td>
-                      <td>{item.price}</td>
-                      <td>{item.qty}</td>
-                      <td className="text-[#C69B7B]">{item.subtotal}</td>
+                      <td>${item.price}.00</td>
+                      <td>{item.quantity}</td>
+                      <td className="text-[#C69B7B] font-bold">
+                        ${(item.price * item.quantity).toFixed(2)}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
 
-            {/* Mobile: cards */}
+            {/* Mobile: card layout */}
             <div className="md:hidden p-4 space-y-4">
-              {items.map((item) => (
+              {currentItems.map((item) => (
                 <div
-                  key={item.name}
+                  key={item.historyId}
                   className="flex gap-4 border-b border-gray-300 pb-4 last:border-0"
                 >
                   <div className="shrink-0">
                     <Image
-                      src={item.img}
+                      src={item.image}
                       width={80}
                       height={120}
                       alt={item.name}
@@ -104,46 +134,29 @@ export default function OrdersHistoryPage() {
                     <h3 className="font-semibold text-sm">{item.name}</h3>
                     <div className="flex justify-between text-xs text-gray-600 mt-2">
                       <span>
-                        <span className="font-semibold">Price:</span>{" "}
-                        {item.price}
+                        <span className="font-semibold">Price:</span> $
+                        {item.price}.00
                       </span>
                       <span>
-                        <span className="font-semibold">Qty:</span> {item.qty}
+                        <span className="font-semibold">Qty:</span>{" "}
+                        {item.quantity}
                       </span>
                     </div>
                     <div className="text-[#C69B7B] font-bold mt-2 text-right">
-                      {item.subtotal}
+                      <p>${(item.price * item.quantity).toFixed(2)}</p>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
 
-            {/* Pagination — shared */}
-            <div className="flex flex-wrap justify-center items-center gap-2 p-4">
-              <button className="w-9 h-9 flex items-center justify-center rounded-md text-gray-600 hover:bg-gray-100">
-                {"<"}
-              </button>
-
-              <button className="w-9 h-9 flex items-center justify-center bg-[#3A3845] text-white font-bold">
-                1
-              </button>
-
-              <button className="w-9 h-9 flex items-center justify-center border border-[#3A3845] text-[#3A3845] font-bold hover:bg-gray-100">
-                2
-              </button>
-
-              <button className="w-9 h-9 flex items-center justify-center text-gray-600 hover:bg-gray-100">
-                3
-              </button>
-
-              <button className="w-9 h-9 flex items-center justify-center text-gray-600 hover:bg-gray-100">
-                4
-              </button>
-
-              <button className="w-9 h-9 flex items-center justify-center text-gray-600 hover:bg-gray-100">
-                {">"}
-              </button>
+            {/* Shared pagination component */}
+            <div className="my-6">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
             </div>
           </div>
         </motion.div>

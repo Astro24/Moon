@@ -11,7 +11,6 @@ export default function MobileNavBar() {
     { href: "/Profile/order-history", label: "Orders" },
     { href: "/Profile/favorites", label: "Favorites" },
     { href: "/Profile/cart", label: "Cart" },
-    { href: "/Profile/shipping-address", label: "Shipping" },
     { href: "/Profile/settings", label: "Settings" },
   ];
 
